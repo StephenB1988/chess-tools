@@ -173,12 +173,12 @@ Based on Chess.com's time controls:
 
 ## Opening Names
 
-The `opening_names.json` file provides ECO code → opening name mappings:
+The `eco_names.json` file provides ECO code → opening name mappings:
 
 ```python
 import json
 
-with open('opening_names.json') as f:
+with open('eco_names.json') as f:
     opening_names = json.load(f)
 
 # Map ECO codes to readable names
@@ -241,7 +241,7 @@ opening_stats = df.groupby('opening_name').agg({
 
 - `chesscom_pgn_export.py` - Downloads games from Chess.com API
 - `analyse_pgn_files.py` - Analyses PGN files with Stockfish
-- `opening_names.json` - ECO code to opening name mappings
+- `eco_names.json` - ECO code to opening name mappings
 - `eco_interpolated.json` - Detailed opening database (optional)
 
 ## Notes
