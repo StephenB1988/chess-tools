@@ -437,6 +437,7 @@ def analyse_all_games(
     if book_path:
         book_path = str(Path(book_path).expanduser())
    
+    print(f"--------------- Files ---------------")
     # Handling no PGN files found
     all_pgn_files = sorted(pgn_path.glob("*.pgn"))
     if not all_pgn_files:
@@ -457,22 +458,22 @@ def analyse_all_games(
         return
     
     print(f"Found {len(all_pgn_files)} total PGN files")
-    print(f"Skipping {len(processed_files)} already-processed files")
-    print(f"Analysing {len(pgn_files)} remaining files")
-    print(f"Using depth: {depth}")
+    print(f"Analysing {len(pgn_files)}/{len(all_pgn_files)} unprocessed files")
+    print("-------------- Running --------------")
+    print(f"Depth: {depth}")
     
     if book_path:
         if Path(book_path).exists():
-            print(f"Using opening book: {book_path}")
+            print(f"Book:  {book_path}")
         else:
-            print(f"Warning: Opening book not found at {book_path}, proceeding without book")
+            print(f"Book: opening book not found at {book_path}, proceeding without (slower, every move analysed)")
             book_path = None
     
     if num_processes is None:
         num_processes = mp.cpu_count() - 4
     
-    print(f"Using {num_processes} parallel processes")
-    print(f"Starting analysis.")
+    print(f"Cores: {num_processes}")
+
     
     # Prepare arguments for parallel processing
     args = [(pgn_file, stockfish_path, depth, book_path) for pgn_file in pgn_files]
@@ -506,8 +507,8 @@ def analyse_all_games(
                        f"{stats.black_book_moves}\t{stats.black_total_moves}\n")
             
             # Progress update
-            if i % 10 == 0 or i == len(pgn_files):
-                print(f"Processed {i}/{len(pgn_files)} games.")
+            if i % 5 == 0 or i == len(pgn_files):
+                print(f"Processed: {i}/{len(pgn_files)} files")
     
     print(f"\n✓ Analysis complete! Results saved to {output_file}")
 
@@ -535,8 +536,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-d", "--depth",
         type=int,
-        default=18,
-        help="Stockfish analysis depth (default: 18, higher=slower but more accurate)"
+        default=20,
+        help="Stockfish analysis depth (default: 20, higher=slower but more accurate)"
     )
     parser.add_argument(
         "-p", "--processes",
